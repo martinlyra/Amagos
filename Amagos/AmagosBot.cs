@@ -29,8 +29,17 @@ namespace Amagos
         async void Initialize()
         {
             _client = new Discord.DiscordClient();
+            _client.Log.Message += (s, e) => { Console.WriteLine(e.Message); };
 
-            await _client.Connect(token: _botToken, tokenType: Discord.TokenType.Bot);
+            try {
+                await _client.Connect(_botToken, Discord.TokenType.Bot);
+                Console.WriteLine("Connected!");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return;
+            }
 
             AttachEventHandlers();
 
@@ -128,6 +137,8 @@ namespace Amagos
             {
 
             }
+
+            Console.WriteLine(_client.CancelToken);
         }
 
         

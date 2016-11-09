@@ -12,6 +12,7 @@ namespace Amagos
         {
             using (var Am = new AmagosBot())
                 Am.RunOrDie();
+            Console.ReadKey();
         }
     }
 }
