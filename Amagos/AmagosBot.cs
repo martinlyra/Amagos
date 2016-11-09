@@ -22,6 +22,7 @@ namespace Amagos
         public AmagosBot()
         {
             _botToken = File.ReadAllText("token");
+            Console.WriteLine(_botToken);
         }
 
         async void Initialize()
