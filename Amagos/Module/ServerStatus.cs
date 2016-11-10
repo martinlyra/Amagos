@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Amagos.Module
@@ -40,6 +41,33 @@ namespace Amagos.Module
             {
                 return new ServerStatusData();
             }
+        }
+
+        internal async static Task<IEnumerable<string>> FetchPlayerData()
+        {
+            IEnumerable<string> playerdata;
+            try
+            {
+                var web = new WebClient();
+                string stream = await web.DownloadStringTaskAsync("http://baystation12.net/status.dat");
+                var json = JObject.Parse(stream);
+
+                var rawdata = json.ToString();
+
+                playerdata = rawdata.Replace('{', ' ').Replace('}', ' ').Split(',')
+                    .Where(s => s.Contains("player") && !s.Contains("players"))
+                    .Select(s => s.Split(':')[1].Replace('"', '\'').Replace('+', ' '))
+                    .OrderBy(s => s);
+                //.Where(s => !s.Contains("player"));
+                //playerdata.ToList().ForEach(s => s = s.Split(':')[1]);
+                Console.WriteLine(playerdata.ToString());
+
+            } catch
+            {
+                return new List<string>();
+            }
+
+            return playerdata;
         }
     }
 }

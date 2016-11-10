@@ -113,9 +113,23 @@ namespace Amagos
                         await e.Channel.SendMessage("Failed to retrieve server data. Currently offline, perhaps?");
                     else
                     {
-                        var response = "**Server is up**; " + data.Version + ", with "
+                        var response = "**Server is up** - " + data.Version + ", with "
                             + data.PlayerCount + " players on the gamemode " + "\"" + data.Mode
                             + "\"";
+                        Console.WriteLine(response);
+                        await e.Channel.SendMessage(response);
+                    }
+                }
+                if (message.Text.Contains("players"))
+                {
+                    var data = await Module.ServerStatus.FetchPlayerData();
+                    if (data.Count() == 0)
+                        await e.Channel.SendMessage("Failed to retrieve server data. Currently offline, perhaps?");
+                    else
+                    {
+                        var response = "**Server is up** - Players present on server: ```";
+                        data.ToList().ForEach(p => response += $"{p.Trim()} ");
+                        response += "```";
                         Console.WriteLine(response);
                         await e.Channel.SendMessage(response);
                     }
