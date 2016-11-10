@@ -28,12 +28,17 @@ namespace Amagos
 
         async void Initialize()
         {
-            _client = new Discord.DiscordClient();
+            var configbuilder = new Discord.DiscordConfigBuilder();
+
+            configbuilder.LogLevel = Discord.LogSeverity.Debug;
+            configbuilder.ConnectionTimeout = 12000;
+
+            _client = new Discord.DiscordClient(config: configbuilder.Build());
             _client.Log.Message += (s, e) => { Console.WriteLine(e.Message); };
 
             try {
                 await _client.Connect(_botToken, Discord.TokenType.Bot);
-                Console.WriteLine("Connected!");
+                //Console.WriteLine("Connected!");
             }
             catch (Exception e)
             {
