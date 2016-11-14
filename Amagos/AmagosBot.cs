@@ -113,9 +113,19 @@ namespace Amagos
                         await e.Channel.SendMessage("Failed to retrieve server data. Currently offline, perhaps?");
                     else
                     {
-                        var response = "**Server is up** - " + data.Version + ", with "
-                            + data.PlayerCount + " players on the gamemode " + "\"" + data.Mode
-                            + "\"";
+                        var timespan = data.RoundDurationAsTimeSpan();
+                        Func<string> duration_string = () =>
+                        {
+                            var h = timespan.Hours;
+                            var m = timespan.Minutes;
+                            return 
+                                $"{(h > 0 ? $"{h} hour{(h > 1 ? 's' : '\0')}{(m > 0 ? " and " : "\0")}" : "\0")}"
+                                + $"{(m > 0 ? $"{m} minute{(m > 1 ? 's' : '\0')}" : "\0")}";
+                        };
+                        var response = 
+                            $"**Server is up** - {data.Version}, with {data.PlayerCount}"
+                            + $"players on the gamemode \'{data.Mode}\'."
+                            + $" Currently {duration_string()} in the game.";
                         Console.WriteLine(response);
                         await e.Channel.SendMessage(response);
                     }
