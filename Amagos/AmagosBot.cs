@@ -123,7 +123,7 @@ namespace Amagos
                                 + $"{(m > 0 ? $"{m} minute{(m > 1 ? 's' : '\0')}" : "\0")}";
                         };
                         var response = 
-                            $"**Server is up** - {data.Version}, with {data.PlayerCount}"
+                            $"**Server is up** - {data.Version}, with {data.PlayerCount} "
                             + $"players on the gamemode \'{data.Mode}\'."
                             + $" Currently {duration_string()} in the game.";
                         Console.WriteLine(response);
