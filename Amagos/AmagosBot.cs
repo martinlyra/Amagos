@@ -124,7 +124,7 @@ namespace Amagos
                         };
                         var response = 
                             $"**Server is up** - {data.Version}, with {data.PlayerCount} "
-                            + $"players on the gamemode \'{data.Mode}\'."
+                            + $"players on the gamemode \'{data.Mode}\' at \'{data.Map}\'."
                             + $" Currently {duration_string()} in the game.";
                         Console.WriteLine(response);
                         await e.Channel.SendMessage(response);
@@ -133,11 +133,12 @@ namespace Amagos
                 if (message.Text.Contains("players"))
                 {
                     var data = await Module.ServerStatus.FetchPlayerData();
-                    if (data.Count() == 0)
+                    var count = data.Count();
+                    if (count == 0)
                         await e.Channel.SendMessage("Failed to retrieve server data. Currently offline, perhaps?");
                     else
                     {
-                        var response = "**Server is up** - Players present on server: ```";
+                        var response = $"**Server is up** - {count} players present on server: ```";
                         data.ToList().ForEach(p => response += $"{p.Trim()} ");
                         response += "```";
                         Console.WriteLine(response);

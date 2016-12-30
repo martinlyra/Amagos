@@ -16,6 +16,7 @@ namespace Amagos.Module
         public string Mode;
         public string PlayerCount;
         public string RoundDuration;
+        public string Map;
 
         public TimeSpan RoundDurationAsTimeSpan()
         {
@@ -40,6 +41,7 @@ namespace Amagos.Module
                 statusdata.Mode = json.SelectToken("mode").ToString();
                 statusdata.PlayerCount = json.SelectToken("players").ToString();
                 statusdata.RoundDuration = json.SelectToken("roundduration").ToString();
+                statusdata.Map = json.SelectToken("map").ToString().Replace('+', ' ');
 
                 Console.WriteLine(Uri.UnescapeDataString(statusdata.RoundDuration));
 
