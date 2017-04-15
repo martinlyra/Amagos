@@ -33,6 +33,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ChatSharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ChatSharp.1.0.1\lib\net451\ChatSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Discord.Net, Version=0.9.6.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Discord.Net.0.9.6\lib\net45\Discord.Net.dll</HintPath>
       <Private>True</Private>
@@ -73,8 +77,9 @@
   <ItemGroup>
     <Compile Include="AmagosBot.cs" />
     <Compile Include="BotModule.cs" />
-    <Compile Include="Module\Notification.cs" />
-    <Compile Include="Module\ServerStatus.cs" />
+    <Compile Include="Module\IrcBridgeRelayModule.cs" />
+    <Compile Include="Module\NotificationModule.cs" />
+    <Compile Include="Module\ServerStatusModule.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServerConfig.cs" />

@@ -7,7 +7,7 @@ using Discord;
 
 namespace Amagos.Module
 {
-    internal sealed class Notification : BotModule
+    internal sealed class NotificationModule : BotModule
     {
 
         string _targetChannelName = "general";

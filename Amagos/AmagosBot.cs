@@ -67,7 +67,14 @@ namespace Amagos
 
         void InitializeModules()
         {
-            _botModules.Add(new Module.Notification());
+            _botModules.Add(new Module.NotificationModule());
+            _botModules.Add(new Module.IrcBridgeModule());
+
+            foreach (var m in _botModules)
+            {
+                m.SetClient(this);
+                m.Initialize();
+            }
         }
 
         private void OnUserUnbanned(object sender, Discord.UserEventArgs e)
@@ -99,54 +106,17 @@ namespace Amagos
                 m.OnUserJoined(sender, e);
         }
 
-        async private void OnMessageReceived(object sender, Discord.MessageEventArgs e)
+        private void OnMessageReceived(object sender, Discord.MessageEventArgs e)
         {
             var message = e.Message;
 
-            if (message.Text.StartsWith(_botCommandPrefix) 
-                || message.IsMentioningMe())
+            foreach (var m in _botModules)
             {
-                if (message.Text.Contains("serverstatus"))
-                {
-                    var data = await Module.ServerStatus.FetchServerData();
-                    if (data.Version == null)
-                        await e.Channel.SendMessage("Failed to retrieve server data. Currently offline, perhaps?");
-                    else
-                    {
-                        var timespan = data.RoundDurationAsTimeSpan();
-                        Func<string> duration_string = () =>
-                        {
-                            var h = timespan.Hours;
-                            var m = timespan.Minutes;
-                            return 
-                                $"{(h > 0 ? $"{h} hour{(h > 1 ? 's' : '\0')}{(m > 0 ? " and " : "\0")}" : "\0")}"
-                                + $"{(m > 0 ? $"{m} minute{(m > 1 ? 's' : '\0')}" : "\0")}";
-                        };
-                        var response = 
-                            $"**Server is up** - {data.Version}, with {data.PlayerCount} "
-                            + $"players on the gamemode \'{data.Mode}\' at \'{data.Map}\'."
-                            + $" Currently {duration_string()} in the game.";
-                        Console.WriteLine(response);
-                        await e.Channel.SendMessage(response);
-                    }
-                }
-                if (message.Text.Contains("players"))
-                {
-                    var data = await Module.ServerStatus.FetchPlayerData();
-                    var count = data.Count();
-                    if (count == 0)
-                        await e.Channel.SendMessage("Failed to retrieve server data. Currently offline, perhaps?");
-                    else
-                    {
-                        var response = $"**Server is up** - {count} players present on server: ```";
-                        data.ToList().ForEach(p => response += $"{p.Trim()} ");
-                        response += "```";
-                        Console.WriteLine(response);
-                        await e.Channel.SendMessage(response);
-                    }
-                }
+                if (message.Text.StartsWith(_botCommandPrefix)
+                        || message.IsMentioningMe())
+                    m.OnCommandReceived(sender, e);
+                m.OnMessageReceived(sender, e);
             }
-
         }
 
         private void OnLeftServer(object sender, Discord.ServerEventArgs e)
@@ -156,7 +126,8 @@ namespace Amagos
 
         private void OnJoinedServer(object sender, Discord.ServerEventArgs e)
         {
-            //throw new NotImplementedException();
+            foreach (var m in _botModules)
+                m.OnJoinedServer(sender, e);
         }
 
         internal void RunOrDie()
@@ -171,8 +142,11 @@ namespace Amagos
             Console.WriteLine(_client.CancelToken);
         }
 
+        public Discord.DiscordClient DiscordClient
+        {
+            get { return _client; }
+        }
         
-
         public void Dispose()
         {
             _client.Disconnect();
