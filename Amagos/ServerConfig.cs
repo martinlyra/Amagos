@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Amagos
 {
-    class ServerConfig
+    public class ServerConfig
     {
+        public List<ulong> PublicCommandChannels = new List<ulong>();
     }
 }
