@@ -1,5 +1,6 @@
 ﻿using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +25,17 @@ namespace Amagos
             this.logger = logger;
         }
 
+        public async Task InitializeAsync()
+        {
+            socketClient.MessageReceived += HandleMessageReceivedAsync;
+
+            await logger.Log(
+            new Discord.LogMessage(
+                Discord.LogSeverity.Info,
+                "Gpt2MessagingService",
+                "Ready!"));
+        }
+
         private ServerConfigService configService;
         ServerConfigService ServerConfig
         {
@@ -45,23 +57,29 @@ namespace Amagos
             }
         }
 
-        public void Initialize()
-        {
-            socketClient.MessageReceived += HandleMessageReceivedAsync;
-        }
-
         private async Task HandleMessageReceivedAsync(SocketMessage arg)
         {
             var message = arg as SocketUserMessage;
-            string jsonResponse = await httpMessaging.PostMessageAsync(message);
+
+            if (arg.Author.IsBot) return;
+
+            var request = new CgiRequest();
+            request.RequestType = CgiRequestType.Gpt2Generate;
+            request.Content = message.Content;
+
+            string jsonResponse = await HttpMessaging.PostMessageAsync(request);
+
+            var json = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonResponse);
+
+            string result = json["result"];
 
             await logger.Log(
                 new Discord.LogMessage(
-                    Discord.LogSeverity.Info, 
+                    Discord.LogSeverity.Verbose, 
                     "Gpt2MessagingService", 
                     jsonResponse));
 
-            var replyTask = message.Channel.SendMessageAsync("Capybara");
+            var replyTask = message.Channel.SendMessageAsync(result);
 
             await replyTask;
         }

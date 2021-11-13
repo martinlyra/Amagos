@@ -28,6 +28,7 @@ namespace Amagos
 
             .AddSingleton<CommandHandler>()
             .AddSingleton<ServerConfigService>()
+            .AddSingleton<Gpt2MessagingService>()
 
             .BuildServiceProvider();
     }

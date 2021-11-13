@@ -61,17 +61,15 @@ namespace Amagos
             _services.GetRequiredService<ServerConfigService>();
 
             await _services.GetRequiredService<CommandHandler>().InitializeAsync();
+            await _services.GetRequiredService<Gpt2MessagingService>().InitializeAsync();
 
             string token = JsonConvert.DeserializeObject<TokenPad>(
                 File.ReadAllText("Config/token.json"))
                 .TokenValue;
 
-            var http = _services.GetRequiredService<HttpMessagingService>();
-            http.PostMessageAsync("Hello world!");
-            /*
             await _client.LoginAsync(TokenType.Bot, token);
             await _client.StartAsync();
-            */
+
             await Task.Delay(Timeout.Infinite);
         }
     }

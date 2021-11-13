@@ -36,7 +36,7 @@ namespace Amagos
                 string content = await response.Content.ReadAsStringAsync();
 
                 await logger.Log(new LogMessage(
-                    LogSeverity.Info,
+                    LogSeverity.Debug,
                     "HttpMessagingService",
                     $"Got reponse {response.StatusCode}, content: {content}"
                     ));
