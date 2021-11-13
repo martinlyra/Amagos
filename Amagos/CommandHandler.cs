@@ -28,6 +28,7 @@ namespace Amagos
         public async Task InitializeAsync()
         {
             await commandService.AddModuleAsync<GuildConfigurationModule>(services);
+            await commandService.AddModuleAsync<GPT2ChatConfigModule>(services);
 
             await logger.Log(new LogMessage(
                 LogSeverity.Info,

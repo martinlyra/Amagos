@@ -66,9 +66,12 @@ namespace Amagos
                 File.ReadAllText("Config/token.json"))
                 .TokenValue;
 
+            var http = _services.GetRequiredService<HttpMessagingService>();
+            http.PostMessageAsync("Hello world!");
+            /*
             await _client.LoginAsync(TokenType.Bot, token);
             await _client.StartAsync();
-
+            */
             await Task.Delay(Timeout.Infinite);
         }
     }

@@ -50,8 +50,12 @@
     <Compile Include="CommandHandler.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="DiscordUtilities.cs" />
+    <Compile Include="Gpt2MessagingService.cs" />
+    <Compile Include="HttpMessagingService.cs" />
     <Compile Include="Initializer.cs" />
     <Compile Include="LoggerService.cs" />
+    <Compile Include="ModuleConfig.cs" />
+    <Compile Include="Modules\GPT2ChatConfigModule.cs" />
     <Compile Include="Modules\GuildConfigurationModule.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

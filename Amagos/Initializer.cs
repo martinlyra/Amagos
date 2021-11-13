@@ -21,6 +21,7 @@ namespace Amagos
 
         public IServiceProvider BuildServiceProvider() => new ServiceCollection()
             .AddSingleton<LoggerService>()
+            .AddSingleton<HttpMessagingService>()
 
             .AddSingleton(commandService)
             .AddSingleton(socketClient)
